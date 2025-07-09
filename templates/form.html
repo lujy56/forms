@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ 'Elevator' if form_type == 'elevator' else 'Escalator' }} Project Submission</title>
+    <title>Schindler Form</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
         .schindler-logo {
@@ -28,23 +28,41 @@
         }
         .question-row {
             display: flex;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 20px;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
         }
         .question-label {
             flex: 2;
+            font-weight: bold;
+            padding-top: 8px;
+            font-size: 19px;
+            line-height: 1.4;
         }
         .question-options {
             flex: 1;
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
+            align-items: center;
         }
         .question-comments {
-            flex: 2;
+            flex: 3;
+            padding: 0 10px;
+        }
+        .question-comments textarea {
+            margin: 8px 0;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            padding: 12px;
+            background: #fff;
         }
         .signature-section {
-            margin-top: 32px;
+            margin-top: 40px;
             text-align: center;
         }
         #signature-pad {
@@ -56,9 +74,9 @@
             background: #b00;
             color: #fff;
             border: none;
-            padding: 6px 16px;
+            padding: 8px 20px;
             border-radius: 4px;
-            margin-top: 8px;
+            margin-top: 12px;
             cursor: pointer;
         }
     </style>
@@ -66,7 +84,7 @@
 <body>
     <div class="form-container">
         <img src="/static/schindler_logo.png" alt="Schindler Logo" class="schindler-logo">
-        <h2>{{ 'Elevator' if form_type == 'elevator' else 'Escalator' }} Project Submission Form</h2>
+        <h2>Schindler Project Review Form</h2>
         <form action="/submit" method="POST" onsubmit="return validateSignature()">
             <input type="hidden" name="form_type" value="{{ form_type }}">
             {% if form_type == 'elevator' %}
@@ -82,10 +100,10 @@
                 <br>
                 <button type="button" class="clear-signature" onclick="clearSignature()">Clear Signature</button>
             </div>
-            <button type="submit" style="background:#b00; margin-top:24px;">Submit</button>
+            <button type="submit" style="background:#b00; margin-top:24px;">Submit Form</button>
         </form>
     </div>
-    <script>
+    <script type="text/javascript">
         // Signature pad logic
         let canvas = document.getElementById('signature-pad');
         let ctx = canvas.getContext('2d');
