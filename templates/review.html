@@ -28,23 +28,41 @@
         }
         .question-row {
             display: flex;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 20px;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
         }
         .question-label {
             flex: 2;
+            font-weight: bold;
+            padding-top: 8px;
+            font-size: 19px;
+            line-height: 1.4;
         }
         .question-options {
             flex: 1;
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
+            align-items: center;
         }
         .question-comments {
-            flex: 2;
+            flex: 3;
+            padding: 0 10px;
+        }
+        .question-comments textarea {
+            margin: 8px 0;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            padding: 12px;
+            background: #fff;
         }
         .signature-section {
-            margin-top: 32px;
+            margin-top: 40px;
             text-align: center;
         }
         #signature-pad {
@@ -56,10 +74,46 @@
             background: #b00;
             color: #fff;
             border: none;
-            padding: 6px 16px;
+            padding: 8px 20px;
             border-radius: 4px;
-            margin-top: 8px;
+            margin-top: 12px;
             cursor: pointer;
+        }
+        .approval-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .approval-checkbox {
+            margin: 15px 0;
+        }
+        .download-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .download-btn {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 15px;
+        }
+        .download-btn:hover {
+            background: #218838;
+        }
+        .timestamps {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .timestamp-item {
+            margin: 8px 0;
         }
     </style>
 </head>
@@ -67,6 +121,24 @@
     <div class="form-container">
         <img src="/static/schindler_logo.png" alt="Schindler Logo" class="schindler-logo">
         <h2>Review Project Submission</h2>
+        
+        <!-- Timestamps Section -->
+        {% if timestamps %}
+        <div class="timestamps">
+            <h4>Form Timeline:</h4>
+            {% if timestamps.initial_submission %}
+            <div class="timestamp-item">
+                <strong>Initial Submission:</strong> {{ timestamps.initial_submission.split('T')[0] }} at {{ timestamps.initial_submission.split('T')[1][:5] }}
+            </div>
+            {% endif %}
+            {% if timestamps.last_modified %}
+            <div class="timestamp-item">
+                <strong>Last Modified:</strong> {{ timestamps.last_modified.split('T')[0] }} at {{ timestamps.last_modified.split('T')[1][:5] }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
         <form action="/review/{{ submission_id }}/submit" method="POST" onsubmit="return validateSignature()">
             <input type="hidden" name="form_type" value="{{ form_type }}">
             {% if form_type == 'elevator' %}
@@ -82,8 +154,24 @@
                 <br>
                 <button type="button" class="clear-signature" onclick="clearSignature()">Clear Signature</button>
             </div>
+            
+            <div class="approval-section">
+                <div class="approval-checkbox">
+                    <label>
+                        <input type="checkbox" name="approved" {% if approved %}checked{% endif %}>
+                        <strong>Approved</strong> (Optional)
+                    </label>
+                </div>
+            </div>
+            
             <button type="submit" style="background:#b00; margin-top:24px;">Submit Review</button>
         </form>
+        
+        <div class="download-section">
+            <a href="/download/{{ submission_id }}" class="download-btn">
+                Download/Print PDF
+            </a>
+        </div>
     </div>
     <script type="text/javascript">
         window.fields = {{ fields|tojson }};
@@ -96,6 +184,8 @@
                         for (let radio of el) {
                             if (radio.value === value) radio.checked = true;
                         }
+                    } else if (el[0].type === 'checkbox') {
+                        el[0].checked = value === 'on' || value === true;
                     } else {
                         el[0].value = value;
                     }

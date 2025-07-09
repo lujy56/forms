@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schindler Form - {{ submission_id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #b00;
+            padding-bottom: 20px;
+        }
+        .logo {
+            width: 80px;
+            height: auto;
+        }
+        .title {
+            color: #b00;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        .section-title {
+            background: #f0f0f0;
+            color: #b00;
+            padding: 8px 12px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-left: 4px solid #b00;
+        }
+        .question-row {
+            margin-bottom: 8px;
+            page-break-inside: avoid;
+        }
+        .question-label {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        .question-answer {
+            margin-left: 20px;
+            margin-bottom: 5px;
+        }
+        .question-comments {
+            margin-left: 20px;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .signature-section {
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+        .signature-image {
+            max-width: 200px;
+            max-height: 100px;
+            border: 1px solid #ccc;
+        }
+        .timestamps {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .timestamp-item {
+            margin: 5px 0;
+        }
+        .version-history {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+        }
+        .version-item {
+            margin: 8px 0;
+            padding: 5px;
+            border-left: 3px solid #b00;
+            background: #fff;
+        }
+        .approved-status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            color: #155724;
+            font-weight: bold;
+        }
+        .not-approved {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        .contact-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .contact-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .contact-label {
+            font-weight: bold;
+            color: #b00;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Schindler Project Review Form</div>
+        <div class="subtitle">{{ form_type.title() }} Project - ID: {{ submission_id }}</div>
+        <div class="subtitle">Generated on: {{ timestamps.last_modified.split('T')[0] if timestamps and timestamps.last_modified else 'N/A' }}</div>
+    </div>
+
+    <!-- Approval Status -->
+    <div class="approved-status {% if not approved %}not-approved{% endif %}">
+        {% if approved %}
+            ✅ APPROVED
+        {% else %}
+            ⏳ PENDING APPROVAL
+        {% endif %}
+    </div>
+
+    <!-- Contact Information -->
+    <div class="section-title">Contact Information</div>
+    <div class="contact-info">
+        <div class="contact-item">
+            <div class="contact-label">Salesman Email:</div>
+            <div>{{ fields.salesman_email if fields.salesman_email else 'N/A' }}</div>
+        </div>
+        <div class="contact-item">
+            <div class="contact-label">Project Manager Email:</div>
+            <div>{{ fields.pm_email if fields.pm_email else 'N/A' }}</div>
+        </div>
+    </div>
+
+    <!-- Project Data -->
+    <div class="section-title">Project Data</div>
+    {% if form_type == 'elevator' %}
+        <div class="question-row">
+            <div class="question-label">Product line:</div>
+            <div class="question-answer">{{ fields.product_line if fields.product_line else 'N/A' }}</div>
+        </div>
+        <div class="question-row">
+            <div class="question-label">Process type:</div>
+            <div class="question-answer">{{ fields.process_type if fields.process_type else 'N/A' }}</div>
+        </div>
+    {% else %}
+        <div class="question-row">
+            <div class="question-label">Color code:</div>
+            <div class="question-answer">{{ fields.color_code if fields.color_code else 'N/A' }}</div>
+        </div>
+        <div class="question-row">
+            <div class="question-label">Product line:</div>
+            <div class="question-answer">{{ fields.product_line if fields.product_line else 'N/A' }}</div>
+        </div>
+        <div class="question-row">
+            <div class="question-label">Process type:</div>
+            <div class="question-answer">{{ fields.process_type if fields.process_type else 'N/A' }}</div>
+        </div>
+    {% endif %}
+
+    <!-- Form Questions -->
+    {% if form_type == 'elevator' %}
+        {% include 'pdf_elevator_content.html' %}
+    {% else %}
+        {% include 'pdf_escalator_content.html' %}
+    {% endif %}
+
+    <!-- Signatures -->
+    <div class="section-title">Signatures</div>
+    {% if form_type == 'elevator' %}
+        <div class="question-row">
+            <div class="question-label">Salesman Name:</div>
+            <div class="question-answer">{{ fields.salesman_name if fields.salesman_name else 'N/A' }}</div>
+        </div>
+        <div class="question-row">
+            <div class="question-label">Order Processing / Sales Engineering Name:</div>
+            <div class="question-answer">{{ fields.order_processing_name if fields.order_processing_name else 'N/A' }}</div>
+        </div>
+        <div class="question-row">
+            <div class="question-label">Project Engineer / Manager Name:</div>
+            <div class="question-answer">{{ fields.project_engineer_name if fields.project_engineer_name else 'N/A' }}</div>
+        </div>
+    {% else %}
+        <div class="question-row">
+            <div class="question-label">Sales Representative Name:</div>
+            <div class="question-answer">{{ fields.sales_rep_name if fields.sales_rep_name else 'N/A' }}</div>
+        </div>
+        <div class="question-row">
+            <div class="question-label">Sales Assistant Name:</div>
+            <div class="question-answer">{{ fields.sales_assistant_name if fields.sales_assistant_name else 'N/A' }}</div>
+        </div>
+        <div class="question-row">
+            <div class="question-label">Supervisor Name:</div>
+            <div class="question-answer">{{ fields.supervisor_name if fields.supervisor_name else 'N/A' }}</div>
+        </div>
+    {% endif %}
+
+    <!-- Digital Signature -->
+    <div class="signature-section">
+        <div class="question-label">Digital Signature:</div>
+        {% if signature_data %}
+            <img src="{{ signature_data }}" alt="Digital Signature" class="signature-image">
+        {% else %}
+            <div style="color: #999; font-style: italic;">No signature provided</div>
+        {% endif %}
+    </div>
+
+    <!-- Timestamps -->
+    {% if timestamps %}
+    <div class="timestamps">
+        <div class="section-title">Form Timeline</div>
+        {% if timestamps.initial_submission %}
+        <div class="timestamp-item">
+            <strong>Initial Submission:</strong> {{ timestamps.initial_submission.split('T')[0] }} at {{ timestamps.initial_submission.split('T')[1][:5] }}
+        </div>
+        {% endif %}
+        {% if timestamps.last_modified %}
+        <div class="timestamp-item">
+            <strong>Last Modified:</strong> {{ timestamps.last_modified.split('T')[0] }} at {{ timestamps.last_modified.split('T')[1][:5] }}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Version History -->
+    {% if version_history and version_history|length > 1 %}
+    <div class="version-history">
+        <div class="section-title">Version History</div>
+        {% for version in version_history %}
+        <div class="version-item">
+            <strong>{{ version.action }}</strong><br>
+            <small>{{ version.timestamp.split('T')[0] }} at {{ version.timestamp.split('T')[1][:5] }}</small>
+            {% if version.approved %}
+            <br><span style="color: #28a745;">✓ Approved</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html> 

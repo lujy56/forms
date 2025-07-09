@@ -1,27 +1,4 @@
-<!-- Escalator/Moving Walk Form Sections -->
-<div class="section-title">Contact Information</div>
-<div class="question-row">
-    <div class="question-label">Salesman Email:</div>
-    <input type="email" name="salesman_email" required style="flex:3;">
-</div>
-<div class="question-row">
-    <div class="question-label">Project Manager Email:</div>
-    <input type="email" name="pm_email" required style="flex:3;">
-</div>
-<div class="section-title">Project Data</div>
-<div class="question-row">
-    <div class="question-label">Color code:</div>
-    <input type="text" name="color_code" required style="flex:3;">
-</div>
-<div class="question-row">
-    <div class="question-label">Product line:</div>
-    <input type="text" name="product_line" required style="flex:3;">
-</div>
-<div class="question-row">
-    <div class="question-label">Process type:</div>
-    <input type="text" name="process_type" required style="flex:3;">
-</div>
-
+<!-- Customer Requirements -->
 <div class="section-title">Customer Requirements</div>
 {% set escalator_questions = [
     ('Working time restrictions?', 'working_time_restrictions', ''),
@@ -34,17 +11,18 @@
 {% for label, name, comment_hint in escalator_questions %}
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
-    <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    <div class="question-answer">
+        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
+    {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        Comments: {{ fields[name + '_comments'] }}
     </div>
+    {% endif %}
 </div>
 {% endfor %}
 
+<!-- Project Scope -->
 <div class="section-title">Project Scope</div>
 {% set project_scope_questions = [
     ('Deliverables from MDC required/available?', 'deliverables_mdc', ''),
@@ -62,17 +40,18 @@
 {% for label, name, comment_hint in project_scope_questions %}
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
-    <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    <div class="question-answer">
+        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
+    {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        Comments: {{ fields[name + '_comments'] }}
     </div>
+    {% endif %}
 </div>
 {% endfor %}
 
+<!-- Site Survey (MOD) -->
 <div class="section-title">Site Survey (MOD)</div>
 {% set site_survey_questions = [
     ('Additional fall protection required? (balustrade/fix point for safety equipment, ...)', 'additional_fall_protection', ''),
@@ -84,17 +63,18 @@
 {% for label, name, comment_hint in site_survey_questions %}
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
-    <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    <div class="question-answer">
+        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
+    {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        Comments: {{ fields[name + '_comments'] }}
     </div>
+    {% endif %}
 </div>
 {% endfor %}
 
+<!-- Installation Requirements -->
 <div class="section-title">Installation Requirements</div>
 {% set installation_questions = [
     ('Installation method clear (scaffold, suspension points, ceiling plates, I beam)?', 'installation_method', ''),
@@ -112,17 +92,18 @@
 {% for label, name, comment_hint in installation_questions %}
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
-    <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    <div class="question-answer">
+        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
+    {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        Comments: {{ fields[name + '_comments'] }}
     </div>
+    {% endif %}
 </div>
 {% endfor %}
 
+<!-- Financial & Contract Requirements -->
 <div class="section-title">Financial & Contract Requirements</div>
 {% set financial_questions = [
     ('Penalty agreed?', 'penalty_agreed', '')
@@ -130,17 +111,18 @@
 {% for label, name, comment_hint in financial_questions %}
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
-    <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    <div class="question-answer">
+        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
+    {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        Comments: {{ fields[name + '_comments'] }}
     </div>
+    {% endif %}
 </div>
 {% endfor %}
 
+<!-- Code Requirements -->
 <div class="section-title">Code Requirements</div>
 {% set code_questions = [
     ('Special code requirements (Earthquake, fire rating, fire fighter, IP rating, local code, ...)?', 'special_code_requirements', ''),
@@ -148,27 +130,13 @@
 {% for label, name, comment_hint in code_questions %}
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
-    <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    <div class="question-answer">
+        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
+    {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        Comments: {{ fields[name + '_comments'] }}
     </div>
+    {% endif %}
 </div>
-{% endfor %}
-
-<div class="section-title">Signatures</div>
-<div class="question-row">
-    <div class="question-label">Sales Representative Name:</div>
-    <input type="text" name="sales_rep_name" required style="flex:3;">
-</div>
-<div class="question-row">
-    <div class="question-label">Sales Assistant Name:</div>
-    <input type="text" name="sales_assistant_name" required style="flex:3;">
-</div>
-<div class="question-row">
-    <div class="question-label">Supervisor Name:</div>
-    <input type="text" name="supervisor_name" required style="flex:3;">
-</div> 
+{% endfor %} 
