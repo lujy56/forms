@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schindler Project Review - Select Type</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body { background: #f4f4f4; }
+        .landing-container {
+            max-width: 400px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .logo {
+            width: 120px;
+            margin-bottom: 24px;
+        }
+        h1 {
+            color: #b00;
+            margin-bottom: 32px;
+        }
+        .select-btn {
+            display: block;
+            width: 100%;
+            margin: 16px 0;
+            padding: 16px;
+            font-size: 18px;
+            background: #b00;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .select-btn:hover {
+            background: #a00;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <img src="/static/schindler_logo.png" alt="Schindler Logo" class="logo">
+        <h1>Project Review Checklist</h1>
+        <form action="/form" method="get">
+            <button class="select-btn" name="type" value="elevator" type="submit">Elevator</button>
+            <button class="select-btn" name="type" value="escalator" type="submit">Escalator / Moving Walk</button>
+        </form>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,186 @@
+<!-- Elevator Form Sections -->
+<div class="section-title">Contact Information</div>
+<div class="question-row">
+    <div class="question-label">Salesman Email:</div>
+    <input type="email" name="salesman_email" required style="flex:3;">
+</div>
+<div class="question-row">
+    <div class="question-label">Project Manager Email:</div>
+    <input type="email" name="pm_email" required style="flex:3;">
+</div>
+<div class="section-title">Project Data</div>
+<div class="question-row">
+    <div class="question-label">Product line:</div>
+    <input type="text" name="product_line" required style="flex:3;">
+</div>
+<div class="question-row">
+    <div class="question-label">Process type:</div>
+    <input type="text" name="process_type" required style="flex:3;">
+</div>
+
+<div class="section-title">Customer Requirements</div>
+{% set elevator_questions = [
+    ('Unit used as construction elevator?', 'unit_construction_elevator', 'Charges approved by FF?'),
+    ('Working time restrictions?', 'working_time_restrictions', ''),
+    ('Special designated use of the elevator? (High traffic, Attica, Heavy loading, ...)', 'special_designated_use', ''),
+    ('Special technical requirements? (Atmospheric exposure, steel structure, ...)', 'special_technical_requirements', ''),
+    ('Installation dates, handover defined and achievable, Programme agreed with customer (lead time, resources, ...)?', 'installation_dates', 'Hand over Date agreed: ..........'),
+    ('Site Office required / Priced?', 'site_office_required', ''),
+    ('Special customer relation and/or installation relevant benefits communicated?', 'special_customer_relation', ''),
+    ('Special work conditions (Temperature, dust, humidity, drilling restrictions, night shift, ...)?', 'special_work_conditions', '')
+] %}
+{% for label, name, comment_hint in elevator_questions %}
+<div class="question-row">
+    <div class="question-label">{{ label }}</div>
+    <div class="question-options">
+        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
+        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
+        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    </div>
+    <div class="question-comments">
+        <input type="text" name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}">
+    </div>
+</div>
+{% endfor %}
+
+<div class="section-title">Project Scope</div>
+{% set project_scope_questions = [
+    ('Deliverables from MDC required/available?', 'deliverables_mdc', ''),
+    ('Several units in the project? Divider Beam, Separator or Screen Considered. Balustrade height?', 'several_units', 'No of units... Configured?...'),
+    ('New hoistway light required?', 'new_hoistway_light', ''),
+    ('Metal works considered? Hoist Beam, Ladders etc.', 'metal_works', ''),
+    ('If VF drive is PF1, RCCB Type budgeted?', 'vf_drive_pf1', ''),
+    ('Painting works considered?', 'painting_works', ''),
+    ('Electrical works considered?', 'electrical_works', ''),
+    ('Civil works considered? Grouting, Fire Sealant', 'civil_works', ''),
+    ('Full Shaft Separator Mesh required?', 'full_shaft_separator', ''),
+    ('Glass elevator use checklist MAN-0213', 'glass_elevator_checklist', ''),
+    ('3 way Intercom considered?', 'intercom', ''),
+    ('GI trunking required?', 'gi_trunking', ''),
+    ('Dismantling considered?', 'dismantling', ''),
+    ('Handover dismantled material to customer?', 'handover_dismantled_material', ''),
+    ('SAIS Package: Cwt screen, Machine/rotating equipment guard/Dividing screen/Pit ladder/platform/Shaft lighting 200 lux', 'sais_package', ''),
+    ('Safety package: Hook certification/hoarding around landing doors/Finishes: Car lighting lux, Architraves or around landing doors, addl cwt fillers blocks.', 'safety_package', ''),
+] %}
+{% for label, name, comment_hint in project_scope_questions %}
+<div class="question-row">
+    <div class="question-label">{{ label }}</div>
+    <div class="question-options">
+        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
+        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
+        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    </div>
+    <div class="question-comments">
+        <input type="text" name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}">
+    </div>
+</div>
+{% endfor %}
+
+<div class="section-title">Site Survey/IFC</div>
+{% set site_survey_questions = [
+    ('Incase of Accessible rooms beneath the hoistway, Cwt Safety Gear Included?', 'accessible_rooms_hoistway', ''),
+    ('Additional fall protection required? (Landing doors / balustrade / trap doors / fix point for safety equipment, ...)', 'additional_fall_protection', ''),
+    ('Building Tolerance considered as minimum +/-25mm?', 'building_tolerance', ''),
+    ('Sufficient parking space provided nearby?', 'parking_space', ''),
+    ('Building accessible (distance to unloading, stairs, MR access, 2.5m rails, ...)?', 'building_accessible', ''),
+    ('Does the Power supply meet schindler requirement?', 'power_supply_schindler', ''),
+    ('Does the flooring need special protection?', 'flooring_protection', ''),
+    ('Keys required to access the building?', 'keys_required', '')
+] %}
+{% for label, name, comment_hint in site_survey_questions %}
+<div class="question-row">
+    <div class="question-label">{{ label }}</div>
+    <div class="question-options">
+        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
+        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
+        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    </div>
+    <div class="question-comments">
+        <input type="text" name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}">
+    </div>
+</div>
+{% endfor %}
+
+<div class="section-title">Installation Requirements</div>
+{% set installation_questions = [
+    ('Installation method clear (INEX, scaffold, scaffoldless) Priced Accordingly?', 'installation_method', 'Single or 2/3 stage installation?...'),
+    ('Structural building issues?', 'structural_building_issues', ''),
+    ('Installation target hours correct, Local Installation Hours considered?', 'installation_target_hours', ''),
+    ('Permanent lifting points for installation required and considered?', 'permanent_lifting_points', ''),
+    ('Potential equalization existing?', 'potential_equalization', ''),
+    ('Sufficient power supply provided?', 'sufficient_power_supply', ''),
+    ('Sufficient venting of the hoistway and machine room existing?', 'sufficient_venting', ''),
+    ('In case of chemical bolts: Are additional hours considered and charged to the customer?', 'chemical_bolts', ''),
+    ('Storage room sufficient?', 'storage_room', ''),
+    ('Truck unloading clarified (truck w/ crane required, forklift accessibility, crane cost, ...)?', 'truck_unloading', ''),
+    ('Waste disposal site cleaning covered?', 'waste_disposal', ''),
+    ('Met SMRA/USANADA Compliance? Necessary equipments priced to make CCTV operational?', 'smra_usanada_compliance', ''),
+    ('Alternate fire recall considered?', 'alternate_fire_recall', ''),
+    ('Transom Provided?', 'transom_provided', '')
+] %}
+{% for label, name, comment_hint in installation_questions %}
+<div class="question-row">
+    <div class="question-label">{{ label }}</div>
+    <div class="question-options">
+        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
+        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
+        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    </div>
+    <div class="question-comments">
+        <input type="text" name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}">
+    </div>
+</div>
+{% endfor %}
+
+<div class="section-title">Financial & Contract Requirements</div>
+{% set financial_questions = [
+    ('Is this project a Turnkey?', 'turnkey', 'If Yes, ask for Subcon site check list/compliance'),
+    ('Penalty agreed?', 'penalty_agreed', '...per day')
+] %}
+{% for label, name, comment_hint in financial_questions %}
+<div class="question-row">
+    <div class="question-label">{{ label }}</div>
+    <div class="question-options">
+        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
+        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
+        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    </div>
+    <div class="question-comments">
+        <input type="text" name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}">
+    </div>
+</div>
+{% endfor %}
+
+<div class="section-title">Code Requirements</div>
+{% set code_questions = [
+    ('Special code requirements (Seismic, fire rating, fire fighter, IP rating, local code, vandal proof, disability, ...)?', 'special_code_requirements', ''),
+    ('Seismic completed?', 'seismic_completed', 'Zone ...'),
+    ('Foreign installation in MR or hoistway? Mitigation?', 'foreign_installation', '')
+] %}
+{% for label, name, comment_hint in code_questions %}
+<div class="question-row">
+    <div class="question-label">{{ label }}</div>
+    <div class="question-options">
+        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
+        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
+        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+    </div>
+    <div class="question-comments">
+        <input type="text" name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}">
+    </div>
+</div>
+{% endfor %}
+
+<div class="section-title">Signatures</div>
+<div class="question-row">
+    <div class="question-label">Salesman Name:</div>
+    <input type="text" name="salesman_name" required style="flex:3;">
+</div>
+<div class="question-row">
+    <div class="question-label">Order Processing / Sales Engineering Name:</div>
+    <input type="text" name="order_processing_name" required style="flex:3;">
+</div>
+<div class="question-row">
+    <div class="question-label">Project Engineer / Manager Name:</div>
+    <input type="text" name="project_engineer_name" required style="flex:3;">
+</div> 
