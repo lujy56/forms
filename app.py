@@ -537,6 +537,11 @@ def form():
         return render_template('form.html', form_type='escalator')
     return render_template('form.html', form_type='elevator')
 
+@app.route('/confirmation', methods=['GET'])
+def confirmation():
+    message = request.args.get('message', 'Your form has been submitted.')
+    return render_template('confirmation.html', message=message)
+
 @app.route('/submit', methods=['POST'])
 def submit():
     form_type = request.form.get('form_type', 'elevator')
@@ -546,10 +551,8 @@ def submit():
     signature_data = data.pop('signature_data', None)
     # Generate unique ID
     submission_id = str(uuid.uuid4())[:8]
-    
     # Add timestamp for initial submission
     current_time = datetime.now().isoformat()
-    
     # Save to JSON
     submission = {
         'id': submission_id,
@@ -585,7 +588,7 @@ def submit():
         flash('Submission successful! Project manager has been notified.', 'success')
     except Exception as e:
         flash(f'Submission saved, but failed to send email: {e}', 'error')
-    return redirect(url_for('form', type=form_type))
+    return redirect(url_for('confirmation', message='Your form has been submitted.'))
 
 @app.route('/review/<submission_id>', methods=['GET'])
 def review(submission_id):
@@ -653,7 +656,7 @@ def review_submit(submission_id):
         flash('Review submitted and salesman notified.', 'success')
     except Exception as e:
         flash(f'Review saved, but failed to send email: {e}', 'error')
-    return redirect(url_for('review', submission_id=submission_id))
+    return redirect(url_for('confirmation', message='Your form has been submitted.'))
 
 @app.route('/download/<submission_id>', methods=['GET'])
 def download_pdf(submission_id):
