@@ -9,14 +9,15 @@
     ('Special work conditions (Temperature, dust, humidity, drilling restrictions, night shift, ...)?', 'special_work_conditions', '')
 ] %}
 {% for label, name, comment_hint in escalator_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -38,14 +39,15 @@
     ('Sprinkler pipes?', 'sprinkler_pipes', '')
 ] %}
 {% for label, name, comment_hint in project_scope_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -61,14 +63,15 @@
     ('Keys/special agreement required to access the building?', 'keys_required', '')
 ] %}
 {% for label, name, comment_hint in site_survey_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -90,14 +93,15 @@
     ('Floor cover protection considered?', 'floor_cover_protection', '')
 ] %}
 {% for label, name, comment_hint in installation_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -109,14 +113,15 @@
     ('Penalty agreed?', 'penalty_agreed', '')
 ] %}
 {% for label, name, comment_hint in financial_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -128,14 +133,15 @@
     ('Special code requirements (Earthquake, fire rating, fire fighter, IP rating, local code, ...)?', 'special_code_requirements', ''),
 ] %}
 {% for label, name, comment_hint in code_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>

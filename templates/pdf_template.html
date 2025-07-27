@@ -5,125 +5,271 @@
     <title>Schindler Form - {{ submission_id }}</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            line-height: 1.4;
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 30px;
+            background: #ffffff;
+            color: #333;
         }
+        
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #b00;
-            padding-bottom: 20px;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #d32f2f;
+            padding-bottom: 25px;
         }
+        
         .logo {
-            width: 80px;
+            width: 100px;
             height: auto;
+            margin-bottom: 15px;
         }
+        
         .title {
-            color: #b00;
-            font-size: 24px;
+            color: #d32f2f;
+            font-size: 28px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+        
         .subtitle {
-            font-size: 14px;
+            font-size: 16px;
             color: #666;
+            margin: 8px 0;
         }
+        
         .section-title {
-            background: #f0f0f0;
-            color: #b00;
-            padding: 8px 12px;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 30px 0 20px 0;
             font-weight: bold;
-            border-left: 4px solid #b00;
+            font-size: 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .question-row {
-            margin-bottom: 8px;
+        
+        .question-container {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             page-break-inside: avoid;
         }
+        
         .question-label {
             font-weight: bold;
-            margin-bottom: 2px;
+            font-size: 15px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
+        
         .question-answer {
-            margin-left: 20px;
-            margin-bottom: 5px;
-        }
-        .question-comments {
-            margin-left: 20px;
-            font-style: italic;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        .signature-section {
-            margin-top: 30px;
+            background: white;
+            border: 2px solid #d32f2f;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #d32f2f;
+            display: inline-block;
+            min-width: 120px;
             text-align: center;
-            border-top: 1px solid #ccc;
-            padding-top: 20px;
         }
-        .signature-image {
-            max-width: 200px;
-            max-height: 100px;
-            border: 1px solid #ccc;
-        }
-        .timestamps {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-        }
-        .timestamp-item {
-            margin: 5px 0;
-        }
-        .version-history {
-            margin-top: 20px;
-            padding: 15px;
+        
+        .question-comments {
             background: #fff3cd;
             border: 1px solid #ffeaa7;
-            border-radius: 4px;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 12px;
+            font-style: italic;
+            color: #856404;
+            border-left: 4px solid #ffc107;
         }
+        
+        .comments-label {
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 5px;
+        }
+        
+        .signature-section {
+            margin-top: 40px;
+            text-align: center;
+            border-top: 2px solid #d32f2f;
+            padding-top: 30px;
+        }
+        
+        .signature-image {
+            max-width: 250px;
+            max-height: 120px;
+            border: 2px solid #d32f2f;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        
+        .timestamps {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timestamp-item {
+            margin: 12px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #d32f2f;
+        }
+        
+        .version-history {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
         .version-item {
-            margin: 8px 0;
-            padding: 5px;
-            border-left: 3px solid #b00;
-            background: #fff;
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid #d32f2f;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+        
         .approved-status {
             text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            border-radius: 12px;
             color: #155724;
             font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        
         .not-approved {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 2px solid #dc3545;
             color: #721c24;
         }
+        
         .page-break {
             page-break-before: always;
         }
+        
         .contact-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 25px;
+            margin-bottom: 30px;
         }
+        
         .contact-item {
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 4px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        
         .contact-label {
             font-weight: bold;
-            color: #b00;
+            color: #d32f2f;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .project-data {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-item:last-child {
+            border-bottom: none;
+        }
+        
+        .data-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .data-value {
+            background: white;
+            border: 1px solid #d32f2f;
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .signature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .signature-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .signature-name {
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+        
+        .signature-value {
+            background: white;
+            border: 1px solid #d32f2f;
+            border-radius: 4px;
+            padding: 10px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                padding: 20px;
+            }
+            .question-container {
+                page-break-inside: avoid;
+            }
         }
     </style>
 </head>
@@ -158,29 +304,31 @@
 
     <!-- Project Data -->
     <div class="section-title">Project Data</div>
-    {% if form_type == 'elevator' %}
-        <div class="question-row">
-            <div class="question-label">Product line:</div>
-            <div class="question-answer">{{ fields.product_line if fields.product_line else 'N/A' }}</div>
-        </div>
-        <div class="question-row">
-            <div class="question-label">Process type:</div>
-            <div class="question-answer">{{ fields.process_type if fields.process_type else 'N/A' }}</div>
-        </div>
-    {% else %}
-        <div class="question-row">
-            <div class="question-label">Color code:</div>
-            <div class="question-answer">{{ fields.color_code if fields.color_code else 'N/A' }}</div>
-        </div>
-        <div class="question-row">
-            <div class="question-label">Product line:</div>
-            <div class="question-answer">{{ fields.product_line if fields.product_line else 'N/A' }}</div>
-        </div>
-        <div class="question-row">
-            <div class="question-label">Process type:</div>
-            <div class="question-answer">{{ fields.process_type if fields.process_type else 'N/A' }}</div>
-        </div>
-    {% endif %}
+    <div class="project-data">
+        {% if form_type == 'elevator' %}
+            <div class="data-item">
+                <div class="data-label">Product line:</div>
+                <div class="data-value">{{ fields.product_line if fields.product_line else 'N/A' }}</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">Process type:</div>
+                <div class="data-value">{{ fields.process_type if fields.process_type else 'N/A' }}</div>
+            </div>
+        {% else %}
+            <div class="data-item">
+                <div class="data-label">Color code:</div>
+                <div class="data-value">{{ fields.color_code if fields.color_code else 'N/A' }}</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">Product line:</div>
+                <div class="data-value">{{ fields.product_line if fields.product_line else 'N/A' }}</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">Process type:</div>
+                <div class="data-value">{{ fields.process_type if fields.process_type else 'N/A' }}</div>
+            </div>
+        {% endif %}
+    </div>
 
     <!-- Form Questions -->
     {% if form_type == 'elevator' %}
@@ -191,33 +339,35 @@
 
     <!-- Signatures -->
     <div class="section-title">Signatures</div>
-    {% if form_type == 'elevator' %}
-        <div class="question-row">
-            <div class="question-label">Salesman Name:</div>
-            <div class="question-answer">{{ fields.salesman_name if fields.salesman_name else 'N/A' }}</div>
-        </div>
-        <div class="question-row">
-            <div class="question-label">Order Processing / Sales Engineering Name:</div>
-            <div class="question-answer">{{ fields.order_processing_name if fields.order_processing_name else 'N/A' }}</div>
-        </div>
-        <div class="question-row">
-            <div class="question-label">Project Engineer / Manager Name:</div>
-            <div class="question-answer">{{ fields.project_engineer_name if fields.project_engineer_name else 'N/A' }}</div>
-        </div>
-    {% else %}
-        <div class="question-row">
-            <div class="question-label">Sales Representative Name:</div>
-            <div class="question-answer">{{ fields.sales_rep_name if fields.sales_rep_name else 'N/A' }}</div>
-        </div>
-        <div class="question-row">
-            <div class="question-label">Sales Assistant Name:</div>
-            <div class="question-answer">{{ fields.sales_assistant_name if fields.sales_assistant_name else 'N/A' }}</div>
-        </div>
-        <div class="question-row">
-            <div class="question-label">Supervisor Name:</div>
-            <div class="question-answer">{{ fields.supervisor_name if fields.supervisor_name else 'N/A' }}</div>
-        </div>
-    {% endif %}
+    <div class="signature-grid">
+        {% if form_type == 'elevator' %}
+            <div class="signature-item">
+                <div class="signature-name">Salesman Name:</div>
+                <div class="signature-value">{{ fields.salesman_name if fields.salesman_name else 'N/A' }}</div>
+            </div>
+            <div class="signature-item">
+                <div class="signature-name">Order Processing / Sales Engineering Name:</div>
+                <div class="signature-value">{{ fields.order_processing_name if fields.order_processing_name else 'N/A' }}</div>
+            </div>
+            <div class="signature-item">
+                <div class="signature-name">Project Engineer / Manager Name:</div>
+                <div class="signature-value">{{ fields.project_engineer_name if fields.project_engineer_name else 'N/A' }}</div>
+            </div>
+        {% else %}
+            <div class="signature-item">
+                <div class="signature-name">Sales Representative Name:</div>
+                <div class="signature-value">{{ fields.sales_rep_name if fields.sales_rep_name else 'N/A' }}</div>
+            </div>
+            <div class="signature-item">
+                <div class="signature-name">Sales Assistant Name:</div>
+                <div class="signature-value">{{ fields.sales_assistant_name if fields.sales_assistant_name else 'N/A' }}</div>
+            </div>
+            <div class="signature-item">
+                <div class="signature-name">Supervisor Name:</div>
+                <div class="signature-value">{{ fields.supervisor_name if fields.supervisor_name else 'N/A' }}</div>
+            </div>
+        {% endif %}
+    </div>
 
     <!-- Timestamps -->
     {% if timestamps %}

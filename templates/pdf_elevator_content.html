@@ -11,14 +11,15 @@
     ('Special work conditions (Temperature, dust, humidity, drilling restrictions, night shift, ...)?', 'special_work_conditions', '')
 ] %}
 {% for label, name, comment_hint in elevator_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -45,14 +46,15 @@
     ('Safety package: Hook certification/hoarding around landing doors/Finishes: Car lighting lux, Architraves or around landing doors, addl cwt fillers blocks.', 'safety_package', ''),
 ] %}
 {% for label, name, comment_hint in project_scope_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -71,14 +73,15 @@
     ('Keys required to access the building?', 'keys_required', '')
 ] %}
 {% for label, name, comment_hint in site_survey_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -103,14 +106,15 @@
     ('Transom Provided?', 'transom_provided', '')
 ] %}
 {% for label, name, comment_hint in installation_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -123,14 +127,15 @@
     ('Penalty agreed?', 'penalty_agreed', '...per day')
 ] %}
 {% for label, name, comment_hint in financial_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>
@@ -144,14 +149,15 @@
     ('Foreign installation in MR or hoistway? Mitigation?', 'foreign_installation', '')
 ] %}
 {% for label, name, comment_hint in code_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-answer">
-        Answer: {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
+        {{ fields[name + '_yn'] if fields[name + '_yn'] else 'N/A' }}
     </div>
     {% if fields[name + '_comments'] %}
     <div class="question-comments">
-        Comments: {{ fields[name + '_comments'] }}
+        <div class="comments-label">Comments:</div>
+        {{ fields[name + '_comments'] }}
     </div>
     {% endif %}
 </div>

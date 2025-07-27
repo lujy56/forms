@@ -6,17 +6,132 @@
     font-weight: normal;
     font-style: normal;
 }
-body, input, textarea, select, button {
-    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 30px;
+    background: #ffffff;
+    color: #333;
 }
+
+.section-title {
+    background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 30px 0 20px 0;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.question-container {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    page-break-inside: avoid;
+}
+
+.question-label {
+    font-weight: bold;
+    font-size: 15px;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.question-answer {
+    background: white;
+    border: 2px solid #d32f2f;
+    border-radius: 6px;
+    padding: 12px 15px;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #d32f2f;
+    display: inline-block;
+    min-width: 120px;
+    text-align: center;
+}
+
+.question-comments {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 12px;
+    font-style: italic;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+.comments-label {
+    font-weight: bold;
+    color: #d32f2f;
+    margin-bottom: 5px;
+}
+
+.offer-review-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.offer-review-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.offer-review-item .question-label {
+    font-weight: bold;
+    color: #d32f2f;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.offer-review-item span {
+    background: white;
+    border: 1px solid #d32f2f;
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: #d32f2f;
+    font-weight: bold;
+    display: block;
+    margin-top: 8px;
+}
+
 input, textarea, select, button, .signature-doodle-btn, script { display: none !important; }
 .question-options, .question-comments { display: block !important; }
+
+@media print {
+    body {
+        padding: 20px;
+    }
+    .question-container {
+        page-break-inside: avoid;
+    }
+}
 </style>
 
 <!-- Show approved status at top of PDF -->
 {% if approved %}
-<div style="background: #28a745; color: white; padding: 12px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; border-radius: 8px;">
-    ✓ APPROVED
+<div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); color: #155724; padding: 25px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 30px; border-radius: 12px; border: 2px solid #28a745; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    ✅ APPROVED
+</div>
+{% else %}
+<div style="background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); color: #721c24; padding: 25px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 30px; border-radius: 12px; border: 2px solid #dc3545; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    ⏳ PENDING APPROVAL
 </div>
 {% endif %}
 {% endif %}
@@ -41,7 +156,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
 <!-- Now update all text inputs, textareas, radios, and signature table cells to use the show_value macro as in the elevator form. -->
 
 <!-- Offer / Order Review Checklist Section -->
-<div class="section-title" style="color: #d32f2f; font-weight: bold;">Offer / Order Review Checklist</div>
+<div class="section-title" style="color: white; font-weight: bold;">Offer / Order Review Checklist</div>
 <div style="color: #666; margin-bottom: 20px;">Global Master</div>
 
 <div class="offer-review-grid">
@@ -178,32 +293,32 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
 
 <!-- Escalator/Moving Walk Form Sections -->
 <div class="section-title">Contact Information</div>
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">Salesman Email:</div>
     {% call show_value('salesman_email') %}
     <input type="email" name="salesman_email" required style="flex:3;">
     {% endcall %}
 </div>
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">Project Manager Email:</div>
     {% call show_value('pm_email') %}
     <input type="email" name="pm_email" required style="flex:3;">
     {% endcall %}
 </div>
 <div class="section-title">Project Data</div>
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">Color code:</div>
     {% call show_value('color_code') %}
     <input type="text" name="color_code" required style="flex:3;">
     {% endcall %}
 </div>
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">Product line:</div>
     {% call show_value('product_line') %}
     <input type="text" name="product_line" required style="flex:3;">
     {% endcall %}
 </div>
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">Process type:</div>
     {% call show_value('process_type') %}
     <input type="text" name="process_type" required style="flex:3;">
@@ -220,11 +335,11 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Special work conditions (Temperature, dust, humidity, drilling restrictions, night shift, ...)?', 'special_work_conditions', '')
 ] %}
 {% for label, name, comment_hint in escalator_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
-            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+            <div class="question-answer">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</div>
         {% else %}
             <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
             <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
@@ -254,11 +369,11 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Sprinkler pipes?', 'sprinkler_pipes', '')
 ] %}
 {% for label, name, comment_hint in project_scope_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
-            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+            <div class="question-answer">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</div>
         {% else %}
             <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
             <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
@@ -282,11 +397,11 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Keys/special agreement required to access the building?', 'keys_required', '')
 ] %}
 {% for label, name, comment_hint in site_survey_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
-            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+            <div class="question-answer">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</div>
         {% else %}
             <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
             <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
@@ -316,11 +431,11 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Floor cover protection considered?', 'floor_cover_protection', '')
 ] %}
 {% for label, name, comment_hint in installation_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
-            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+            <div class="question-answer">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</div>
         {% else %}
             <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
             <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
@@ -340,11 +455,11 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Penalty agreed?', 'penalty_agreed', '')
 ] %}
 {% for label, name, comment_hint in financial_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
-            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+            <div class="question-answer">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</div>
         {% else %}
             <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
             <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
@@ -364,11 +479,11 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Special code requirements (Earthquake, fire rating, fire fighter, IP rating, local code, ...)?', 'special_code_requirements', ''),
 ] %}
 {% for label, name, comment_hint in code_questions %}
-<div class="question-row">
+<div class="question-container">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
-            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+            <div class="question-answer">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</div>
         {% else %}
             <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
             <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
