@@ -43,6 +43,28 @@
         .submit-another-btn:hover {
             background: #a00;
         }
+        .download-pdf-btn {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 16px;
+        }
+        .download-pdf-btn:hover {
+            background: #218838;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -50,9 +72,16 @@
         <img src="/static/schindler_logo.png" alt="Schindler Logo" class="logo">
         <div class="confirmation-heading">Form Submitted!</div>
         <div class="confirmation-message">{{ message }}</div>
-        <form action="/" method="get">
-            <button class="submit-another-btn" type="submit">Fill in another form</button>
-        </form>
+        <div class="button-container">
+            <form action="/" method="get">
+                <button class="submit-another-btn" type="submit">Fill in another form</button>
+            </form>
+            {% if submission_id and review_submission %}
+            <a href="/download/{{ submission_id }}" class="download-pdf-btn">
+                Download/Print PDF
+            </a>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html> 

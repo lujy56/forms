@@ -85,78 +85,15 @@
     <div class="form-container">
         <img src="/static/schindler_logo.png" alt="Schindler Logo" class="schindler-logo">
         <h2>Schindler Project Review Form</h2>
-        <form action="/submit" method="POST" onsubmit="return validateSignature()">
+        <form action="/submit" method="POST">
             <input type="hidden" name="form_type" value="{{ form_type }}">
             {% if form_type == 'elevator' %}
                 {% include 'form_elevator.html' %}
             {% else %}
                 {% include 'form_escalator.html' %}
             {% endif %}
-            <div class="signature-section">
-                <label for="signature-data">Digital Signature <span style="color:#b00;">*</span></label>
-                <br>
-                <canvas id="signature-pad" width="350" height="120"></canvas>
-                <input type="hidden" name="signature_data" id="signature-data" required>
-                <br>
-                <button type="button" class="clear-signature" onclick="clearSignature()">Clear Signature</button>
-            </div>
             <button type="submit" style="background:#b00; margin-top:24px;">Submit Form</button>
         </form>
     </div>
-    <script type="text/javascript">
-        // Signature pad logic
-        let canvas = document.getElementById('signature-pad');
-        let ctx = canvas.getContext('2d');
-        let drawing = false;
-        let lastX = 0, lastY = 0;
-        function startDraw(e) {
-            drawing = true;
-            [lastX, lastY] = getXY(e);
-        }
-        function draw(e) {
-            if (!drawing) return;
-            let [x, y] = getXY(e);
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = '#b00';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            [lastX, lastY] = [x, y];
-        }
-        function stopDraw() { drawing = false; }
-        function getXY(e) {
-            if (e.touches) {
-                let rect = canvas.getBoundingClientRect();
-                return [e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top];
-            } else {
-                return [e.offsetX, e.offsetY];
-            }
-        }
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDraw);
-        canvas.addEventListener('mouseout', stopDraw);
-        canvas.addEventListener('touchstart', startDraw);
-        canvas.addEventListener('touchmove', function(e) { draw(e); e.preventDefault(); }, {passive: false});
-        canvas.addEventListener('touchend', stopDraw);
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        function validateSignature() {
-            // Save signature as data URL
-            let data = canvas.toDataURL();
-            document.getElementById('signature-data').value = data;
-            // Check if signature is not blank
-            let blank = document.createElement('canvas');
-            blank.width = canvas.width;
-            blank.height = canvas.height;
-            if (canvas.toDataURL() === blank.toDataURL()) {
-                alert('Please provide your digital signature.');
-                return false;
-            }
-            return true;
-        }
-    </script>
 </body>
 </html> 

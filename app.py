@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file, make_response
 import uuid
 import json
 import os
@@ -12,6 +12,7 @@ from reportlab.lib import colors
 import tempfile
 import base64
 import io
+from weasyprint import HTML
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for flash messages
@@ -47,7 +48,7 @@ def send_email(to, subject, body, reply_to=None):
         msg.reply_to = reply_to
     mail.send(msg)
 
-def create_pdf_content(submission_id, form_type, fields, signature_data, approved, timestamps, version_history):
+def create_pdf_content(submission_id, form_type, fields, approved, timestamps, version_history):
     """Create PDF content using reportlab"""
     story = []
     styles = getSampleStyleSheet()
@@ -540,15 +541,16 @@ def form():
 @app.route('/confirmation', methods=['GET'])
 def confirmation():
     message = request.args.get('message', 'Your form has been submitted.')
-    return render_template('confirmation.html', message=message)
+    submission_id = request.args.get('submission_id', None)
+    review_submission = request.args.get('review_submission', 'False').lower() == 'true'
+    return render_template('confirmation.html', message=message, submission_id=submission_id, review_submission=review_submission)
 
 @app.route('/submit', methods=['POST'])
 def submit():
     form_type = request.form.get('form_type', 'elevator')
-    # Collect all form data
     data = dict(request.form)
-    # Remove signature_data from form fields (will add separately)
-    signature_data = data.pop('signature_data', None)
+    # Save doodle signature
+    signature_doodle_data = data.get('signature_doodle_data', '')
     # Generate unique ID
     submission_id = str(uuid.uuid4())[:8]
     # Add timestamp for initial submission
@@ -558,7 +560,9 @@ def submit():
         'id': submission_id,
         'form_type': form_type,
         'fields': data,
-        'signature_data': signature_data,
+        'signature_doodle_data': signature_doodle_data,
+        'initial_signature': signature_doodle_data,  # Save initial signature separately
+        'review_signature': '',  # Initialize review signature as empty
         'approval_comments': '',
         'approved': False,
         'timestamps': {
@@ -568,8 +572,7 @@ def submit():
         'version_history': [{
             'timestamp': current_time,
             'action': 'Initial submission by salesman',
-            'fields': data.copy(),
-            'signature_data': signature_data
+            'fields': data.copy()
         }]
     }
     submissions = load_submissions()
@@ -598,14 +601,14 @@ def review(submission_id):
         return 'Submission not found', 404
     form_type = submission.get('form_type', 'elevator')
     fields = submission.get('fields', {})
-    signature_data = submission.get('signature_data', '')
+    signature_doodle_data = submission.get('signature_doodle_data', '')
     approved = submission.get('approved', False)
     timestamps = submission.get('timestamps', {})
     return render_template('review.html', 
                          submission_id=submission_id, 
                          form_type=form_type, 
                          fields=fields, 
-                         signature_data=signature_data,
+                         signature_doodle_data=signature_doodle_data,
                          approved=approved,
                          timestamps=timestamps)
 
@@ -614,7 +617,7 @@ def review_submit(submission_id):
     # Get updated data from PM
     form_type = request.form.get('form_type', 'elevator')
     data = dict(request.form)
-    signature_data = data.pop('signature_data', None)
+    signature_doodle_data = data.get('signature_doodle_data', '')
     approved = 'approved' in request.form
     
     # Load and update submission
@@ -625,10 +628,21 @@ def review_submit(submission_id):
     
     current_time = datetime.now().isoformat()
     
+    # Preserve original signature if no new signature is provided
+    original_signature = submission.get('signature_doodle_data', '')
+    if not signature_doodle_data or signature_doodle_data == '':
+        signature_doodle_data = original_signature
+    
+    # Store both signatures separately
+    initial_signature = submission.get('initial_signature', original_signature)
+    review_signature = signature_doodle_data if signature_doodle_data != original_signature else ''
+    
     # Update submission
     submission['form_type'] = form_type
     submission['fields'] = data
-    submission['signature_data'] = signature_data
+    submission['signature_doodle_data'] = signature_doodle_data
+    submission['initial_signature'] = initial_signature
+    submission['review_signature'] = review_signature
     submission['approved'] = approved
     submission['timestamps']['last_modified'] = current_time
     
@@ -640,7 +654,6 @@ def review_submit(submission_id):
         'timestamp': current_time,
         'action': 'Updated by project manager',
         'fields': data.copy(),
-        'signature_data': signature_data,
         'approved': approved
     })
     
@@ -656,7 +669,7 @@ def review_submit(submission_id):
         flash('Review submitted and salesman notified.', 'success')
     except Exception as e:
         flash(f'Review saved, but failed to send email: {e}', 'error')
-    return redirect(url_for('confirmation', message='Your form has been submitted.'))
+    return redirect(url_for('confirmation', message='Your form has been submitted.', submission_id=submission_id, review_submission=True))
 
 @app.route('/download/<submission_id>', methods=['GET'])
 def download_pdf(submission_id):
@@ -664,54 +677,50 @@ def download_pdf(submission_id):
     submission = next((s for s in submissions if s['id'] == submission_id), None)
     if not submission:
         return 'Submission not found', 404
-    
-    # Mark as approved when PDF is downloaded (final approval)
-    current_time = datetime.now().isoformat()
-    submission['approved'] = True
-    submission['timestamps']['last_modified'] = current_time
-    
-    # Add to version history that this was the final approval
-    if 'version_history' not in submission:
-        submission['version_history'] = []
-    
-    submission['version_history'].append({
-        'timestamp': current_time,
-        'action': 'Final approval - PDF downloaded',
-        'fields': submission['fields'].copy(),
-        'signature_data': submission.get('signature_data', ''),
-        'approved': True
-    })
-    
-    save_submissions(submissions)
-    
+
     form_type = submission.get('form_type', 'elevator')
     fields = submission.get('fields', {})
-    signature_data = submission.get('signature_data', '')
-    approved = submission.get('approved', True)  # Now always True
-    timestamps = submission.get('timestamps', {})
-    version_history = submission.get('version_history', [])
+    signature_doodle_data = submission.get('signature_doodle_data', '')
+    initial_signature = submission.get('initial_signature', '')
+    review_signature = submission.get('review_signature', '')
+    approved = submission.get('approved', False)
     
-    # Create temporary file
-    with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
-        tmp_file_path = tmp_file.name
+    # Check if signature data is in fields dictionary
+    if not signature_doodle_data and 'signature_doodle_data' in fields:
+        signature_doodle_data = fields['signature_doodle_data']
     
-    try:
-        # Create PDF
-        doc = SimpleDocTemplate(tmp_file_path, pagesize=A4)
-        story = create_pdf_content(submission_id, form_type, fields, signature_data, approved, timestamps, version_history)
-        doc.build(story)
-        
-        # Send file and clean up
-        return send_file(tmp_file_path, 
-                       as_attachment=True, 
-                       download_name=f'schindler_form_{submission_id}.pdf',
-                       mimetype='application/pdf')
-    finally:
-        # Clean up temporary file after sending
-        try:
-            os.unlink(tmp_file_path)
-        except:
-            pass
+    # Debug: Print signature data info
+    print(f"PDF Generation Debug:")
+    print(f"Submission ID: {submission_id}")
+    print(f"Initial signature length: {len(initial_signature) if initial_signature else 0}")
+    print(f"Review signature length: {len(review_signature) if review_signature else 0}")
+    print(f"Approved status: {approved}")
+    print(f"Initial signature preview: {initial_signature[:50] if initial_signature else 'None'}")
+    print(f"Review signature preview: {review_signature[:50] if review_signature else 'None'}")
+
+    # Choose the correct template
+    if form_type == 'elevator':
+        template_name = 'form_elevator.html'
+    else:
+        template_name = 'form_escalator.html'
+
+    # Render the filled form as HTML
+    html = render_template(
+        template_name,
+        fields=fields,
+        signature_doodle_data=signature_doodle_data,
+        initial_signature=initial_signature,
+        review_signature=review_signature,
+        approved=approved,
+        pdf_mode=True  # Optional: use this in template to hide buttons/scripts
+    )
+
+    # Generate PDF from HTML
+    pdf = HTML(string=html, base_url=request.host_url).write_pdf()
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=schindler_form_{submission_id}.pdf'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True) 

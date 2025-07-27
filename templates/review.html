@@ -139,21 +139,13 @@
         </div>
         {% endif %}
         
-        <form action="/review/{{ submission_id }}/submit" method="POST" onsubmit="return validateSignature()">
+        <form action="/review/{{ submission_id }}/submit" method="POST">
             <input type="hidden" name="form_type" value="{{ form_type }}">
             {% if form_type == 'elevator' %}
-                {% include 'form_elevator.html' %}
+                {% include 'form_elevator.html' with context %}
             {% else %}
-                {% include 'form_escalator.html' %}
+                {% include 'form_escalator.html' with context %}
             {% endif %}
-            <div class="signature-section">
-                <label for="signature-data">Digital Signature <span style="color:#b00;">*</span></label>
-                <br>
-                <canvas id="signature-pad" width="350" height="120"></canvas>
-                <input type="hidden" name="signature_data" id="signature-data" required>
-                <br>
-                <button type="button" class="clear-signature" onclick="clearSignature()">Clear Signature</button>
-            </div>
             
             <div class="approval-section">
                 <div class="approval-checkbox">
@@ -167,15 +159,11 @@
             <button type="submit" style="background:#b00; margin-top:24px;">Submit Review</button>
         </form>
         
-        <div class="download-section">
-            <a href="/download/{{ submission_id }}" class="download-btn">
-                Download/Print PDF
-            </a>
-        </div>
+
     </div>
     <script type="text/javascript">
         window.fields = {{ fields|tojson }};
-        window.signature_data = {{ signature_data|tojson }};
+        window.signature_doodle_data = {{ signature_doodle_data|tojson }};
         window.onload = function() {
             for (const [name, value] of Object.entries(window.fields)) {
                 const el = document.getElementsByName(name);
@@ -191,72 +179,31 @@
                     }
                 }
             }
-            // Prefill signature if present
-            const sigData = window.signature_data;
-            if (sigData && sigData.length > 30) {
-                let img = new window.Image();
-                img.onload = function() {
-                    let canvas = document.getElementById('signature-pad');
-                    let ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                };
-                img.src = sigData;
+            
+            // Initialize signature data if it exists
+            if (window.signature_doodle_data) {
+                const signatureInput = document.getElementById('signature-doodle-data');
+                if (signatureInput) {
+                    signatureInput.value = window.signature_doodle_data;
+                }
+                
+                // Manually create signature overlay if it doesn't exist
+                const signatureSection = document.getElementById('signature-section-table');
+                if (signatureSection && !document.querySelector('.signature-doodle-overlay')) {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'signature-doodle-overlay';
+                    overlay.style.cssText = 'position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;';
+                    
+                    const img = document.createElement('img');
+                    img.src = window.signature_doodle_data;
+                    img.alt = 'Signature';
+                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; opacity: 0.8;';
+                    
+                    overlay.appendChild(img);
+                    signatureSection.appendChild(overlay);
+                }
             }
         };
-        // Signature pad logic (same as form.html)
-        let canvas = document.getElementById('signature-pad');
-        let ctx = canvas.getContext('2d');
-        let drawing = false;
-        let lastX = 0, lastY = 0;
-        function startDraw(e) {
-            drawing = true;
-            [lastX, lastY] = getXY(e);
-        }
-        function draw(e) {
-            if (!drawing) return;
-            let [x, y] = getXY(e);
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = '#b00';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            [lastX, lastY] = [x, y];
-        }
-        function stopDraw() { drawing = false; }
-        function getXY(e) {
-            if (e.touches) {
-                let rect = canvas.getBoundingClientRect();
-                return [e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top];
-            } else {
-                return [e.offsetX, e.offsetY];
-            }
-        }
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDraw);
-        canvas.addEventListener('mouseout', stopDraw);
-        canvas.addEventListener('touchstart', startDraw);
-        canvas.addEventListener('touchmove', function(e) { draw(e); e.preventDefault(); }, {passive: false});
-        canvas.addEventListener('touchend', stopDraw);
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        function validateSignature() {
-            // Save signature as data URL
-            let data = canvas.toDataURL();
-            document.getElementById('signature-data').value = data;
-            // Check if signature is not blank
-            let blank = document.createElement('canvas');
-            blank.width = canvas.width;
-            blank.height = canvas.height;
-            if (canvas.toDataURL() === blank.toDataURL()) {
-                alert('Please provide your digital signature.');
-                return false;
-            }
-            return true;
-        }
     </script>
 </body>
 </html> 

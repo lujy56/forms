@@ -1,50 +1,195 @@
+{% if pdf_mode %}
+<style>
+@font-face {
+    font-family: 'Roboto';
+    src: url('/static/fonts/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+body, input, textarea, select, button {
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+input, textarea, select, button, .signature-doodle-btn, script { display: none !important; }
+.question-options, .question-comments { display: block !important; }
+</style>
+
+<!-- Show approved status at top of PDF -->
+{% if approved %}
+<div style="background: #28a745; color: white; padding: 12px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; border-radius: 8px;">
+    ✓ APPROVED
+</div>
+{% endif %}
+{% endif %}
+
+{% macro show_value(name, default='') %}
+    {% if pdf_mode %}
+        <span style="font-weight:normal;">{{ fields[name] if fields and name in fields else default }}</span>
+    {% else %}
+        {{ caller() }}
+    {% endif %}
+{% endmacro %}
+
+
+
+<!-- Example usage for a text input: -->
+<!--
+{% call show_value('offer_number') %}
+    <input type="text" name="offer_number" required>
+{% endcall %}
+-->
+
+<!-- Now update all text inputs, textareas, radios, and signature table cells to use the show_value macro as in the elevator form. -->
+
 <!-- Offer / Order Review Checklist Section -->
 <div class="section-title" style="color: #d32f2f; font-weight: bold;">Offer / Order Review Checklist</div>
 <div style="color: #666; margin-bottom: 20px;">Global Master</div>
 
-<div class="question-row">
+<div class="offer-review-grid">
+    <div class="offer-review-item">
     <div class="question-label">Offer N°:</div>
-    <input type="text" name="offer_number" required style="flex:3;">
+        {% call show_value('offer_number') %}
+        <input type="text" name="offer_number" required>
+        {% endcall %}
 </div>
-<div class="question-row">
+    <div class="offer-review-item">
     <div class="question-label">Project Name:</div>
-    <input type="text" name="project_name" required style="flex:3;">
+        {% call show_value('project_name') %}
+        <input type="text" name="project_name" required>
+        {% endcall %}
 </div>
-<div class="question-row">
+    <div class="offer-review-item">
     <div class="question-label">Com. N°:</div>
-    <input type="text" name="com_number" required style="flex:3;">
+        {% call show_value('com_number') %}
+        <input type="text" name="com_number" required>
+        {% endcall %}
 </div>
-<div class="question-row">
+    <div class="offer-review-item">
     <div class="question-label">Customer:</div>
-    <input type="text" name="customer_name" required style="flex:3;">
+        {% call show_value('customer_name') %}
+        <input type="text" name="customer_name" required>
+        {% endcall %}
+    </div>
+    <div class="offer-review-item">
+        <div class="question-label">Customer Contact:</div>
+        {% call show_value('customer_contact') %}
+        <input type="text" name="customer_contact" required>
+        {% endcall %}
+    </div>
 </div>
-<div class="question-row">
-    <div class="question-label">Customer Contact:</div>
-    <input type="text" name="customer_contact" required style="flex:3;">
+
+<style>
+.offer-review-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+    margin-bottom: 24px;
+}
+.offer-review-item {
+    display: flex;
+    flex-direction: column;
+    font-size: 17px;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+.offer-review-item input[type="text"] {
+    font-size: 15px;
+    padding: 6px 10px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: #f1f3f4;
+    margin-top: 6px;
+    width: 90%;
+    max-width: 260px;
+    box-sizing: border-box;
+}
+@media (max-width: 700px) {
+    .offer-review-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<!-- Project Qualification Criteria Section -->
+<div class="section-title" style="margin-top: 10px;">Project Qualification Criteria</div>
+<div class="qualification-box">
+    {% for label, name in [
+        ('Projects priced more than 1 million SAR', 'qual_1m_sar'),
+        ('Projects located in remote areas', 'qual_remote'),
+        ('Non-standard jobs', 'qual_nonstandard'),
+        ('CUST product lines', 'qual_cust'),
+        ('MOD projects', 'qual_mod')
+    ] %}
+        <label class="qualification-item">
+            {% if pdf_mode %}
+                <span style="font-size:18px;">{{ '✔' if fields and (name in fields) else '✗' }}</span>
+                <span style="margin-left:8px;">{{ label }}</span>
+            {% else %}
+                <input type="checkbox" name="{{ name }}" {% if fields and (name in fields) %}checked{% endif %}> {{ label }}
+            {% endif %}
+        </label>
+    {% endfor %}
 </div>
+
+<style>
+.qualification-box {
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    background: #f8f9fa;
+    padding: 18px 24px 10px 24px;
+    margin-bottom: 28px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 520px;
+}
+.qualification-item {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #111;
+}
+.qualification-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #b00;
+    margin-right: 8px;
+}
+</style>
 
 <!-- Escalator/Moving Walk Form Sections -->
 <div class="section-title">Contact Information</div>
 <div class="question-row">
     <div class="question-label">Salesman Email:</div>
+    {% call show_value('salesman_email') %}
     <input type="email" name="salesman_email" required style="flex:3;">
+    {% endcall %}
 </div>
 <div class="question-row">
     <div class="question-label">Project Manager Email:</div>
+    {% call show_value('pm_email') %}
     <input type="email" name="pm_email" required style="flex:3;">
+    {% endcall %}
 </div>
 <div class="section-title">Project Data</div>
 <div class="question-row">
     <div class="question-label">Color code:</div>
+    {% call show_value('color_code') %}
     <input type="text" name="color_code" required style="flex:3;">
+    {% endcall %}
 </div>
 <div class="question-row">
     <div class="question-label">Product line:</div>
+    {% call show_value('product_line') %}
     <input type="text" name="product_line" required style="flex:3;">
+    {% endcall %}
 </div>
 <div class="question-row">
     <div class="question-label">Process type:</div>
+    {% call show_value('process_type') %}
     <input type="text" name="process_type" required style="flex:3;">
+    {% endcall %}
 </div>
 
 <div class="section-title">Customer Requirements</div>
@@ -60,12 +205,18 @@
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+        {% if pdf_mode %}
+            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+        {% else %}
+            <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
+            <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
+            <label><input type="radio" name="{{ name }}_yn" value="N/A" required {% if fields and fields[name + '_yn']=='N/A' %}checked{% endif %}> N/A</label>
+        {% endif %}
     </div>
     <div class="question-comments">
+        {% call show_value(name + '_comments') %}
         <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        {% endcall %}
     </div>
 </div>
 {% endfor %}
@@ -88,12 +239,18 @@
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+        {% if pdf_mode %}
+            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+        {% else %}
+            <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
+            <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
+            <label><input type="radio" name="{{ name }}_yn" value="N/A" required {% if fields and fields[name + '_yn']=='N/A' %}checked{% endif %}> N/A</label>
+        {% endif %}
     </div>
     <div class="question-comments">
+        {% call show_value(name + '_comments') %}
         <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        {% endcall %}
     </div>
 </div>
 {% endfor %}
@@ -110,12 +267,18 @@
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+        {% if pdf_mode %}
+            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+        {% else %}
+            <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
+            <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
+            <label><input type="radio" name="{{ name }}_yn" value="N/A" required {% if fields and fields[name + '_yn']=='N/A' %}checked{% endif %}> N/A</label>
+        {% endif %}
     </div>
     <div class="question-comments">
+        {% call show_value(name + '_comments') %}
         <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        {% endcall %}
     </div>
 </div>
 {% endfor %}
@@ -138,12 +301,18 @@
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+        {% if pdf_mode %}
+            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+        {% else %}
+            <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
+            <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
+            <label><input type="radio" name="{{ name }}_yn" value="N/A" required {% if fields and fields[name + '_yn']=='N/A' %}checked{% endif %}> N/A</label>
+        {% endif %}
     </div>
     <div class="question-comments">
+        {% call show_value(name + '_comments') %}
         <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        {% endcall %}
     </div>
 </div>
 {% endfor %}
@@ -156,12 +325,18 @@
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+        {% if pdf_mode %}
+            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+        {% else %}
+            <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
+            <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
+            <label><input type="radio" name="{{ name }}_yn" value="N/A" required {% if fields and fields[name + '_yn']=='N/A' %}checked{% endif %}> N/A</label>
+        {% endif %}
     </div>
     <div class="question-comments">
+        {% call show_value(name + '_comments') %}
         <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        {% endcall %}
     </div>
 </div>
 {% endfor %}
@@ -174,26 +349,309 @@
 <div class="question-row">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
-        <label><input type="radio" name="{{ name }}_yn" value="Yes" required> Yes</label>
-        <label><input type="radio" name="{{ name }}_yn" value="No" required> No</label>
-        <label><input type="radio" name="{{ name }}_yn" value="N/A" required> N/A</label>
+        {% if pdf_mode %}
+            <span style="font-weight:normal;">{{ fields[name + '_yn'] if fields and (name + '_yn') in fields else 'N/A' }}</span>
+        {% else %}
+            <label><input type="radio" name="{{ name }}_yn" value="Yes" required {% if fields and fields[name + '_yn']=='Yes' %}checked{% endif %}> Yes</label>
+            <label><input type="radio" name="{{ name }}_yn" value="No" required {% if fields and fields[name + '_yn']=='No' %}checked{% endif %}> No</label>
+            <label><input type="radio" name="{{ name }}_yn" value="N/A" required {% if fields and fields[name + '_yn']=='N/A' %}checked{% endif %}> N/A</label>
+        {% endif %}
     </div>
     <div class="question-comments">
+        {% call show_value(name + '_comments') %}
         <textarea name="{{ name }}_comments" placeholder="Comments{{ ' - ' + comment_hint if comment_hint else '' }}" rows="3" style="width: 100%; resize: vertical;"></textarea>
+        {% endcall %}
     </div>
 </div>
 {% endfor %}
 
-<div class="section-title">Signatures</div>
-<div class="question-row">
-    <div class="question-label">Sales Representative Name:</div>
-    <input type="text" name="sales_rep_name" required style="flex:3;">
+<!-- Signatures Section (Professional Table Layout) -->
+<div class="signature-section-table" id="signature-section-table">
+    <div class="signature-table-header">Signatures</div>
+    <div class="signature-table-row signature-table-review">
+        <div class="signature-table-cell" colspan="4" style="font-weight:normal;">I have carefully reviewed and agreed on the project content.</div>
+    </div>
+    <div class="signature-table-row signature-table-note">
+        <div class="signature-table-cell signature-table-note-cell" colspan="4" style="font-size:13px; color:#444;">
+            *Projects priced more than one million SAR or projected located in remote areas or for the nonstandard jobs (Specification received from the customer) or CUST product lines or all MOD
+        </div>
+    </div>
+    <div class="signature-table-row signature-table-header-row">
+        <div class="signature-table-cell"></div>
+        <div class="signature-table-cell">Salesman</div>
+        <div class="signature-table-cell">Order engineering</div>
+        <div class="signature-table-cell">Project Engineer/Manager</div>
+    </div>
+    <div class="signature-table-row signature-table-subheader">
+        <div class="signature-table-cell" colspan="4" style="font-weight:bold; background:#f8f9fa;">Offer Review</div>
+    </div>
+    <div class="signature-table-row">
+        <div class="signature-table-cell">Name:</div>
+        <div class="signature-table-cell">{% call show_value('offer_salesman_name') %}<input type="text" name="offer_salesman_name" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('offer_order_engineering_name') %}<input type="text" name="offer_order_engineering_name" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('offer_manager_name') %}<input type="text" name="offer_manager_name" class="signature-input">{% endcall %}</div>
+    </div>
+    <div class="signature-table-row">
+        <div class="signature-table-cell">Date:</div>
+        <div class="signature-table-cell">{% call show_value('offer_salesman_date') %}<input type="date" name="offer_salesman_date" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('offer_order_engineering_date') %}<input type="date" name="offer_order_engineering_date" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('offer_manager_date') %}<input type="date" name="offer_manager_date" class="signature-input">{% endcall %}</div>
+    </div>
+    <div class="signature-table-row signature-table-subheader">
+        <div class="signature-table-cell" colspan="4" style="font-weight:bold; background:#f8f9fa;">Order Review(Pull)</div>
+    </div>
+    <div class="signature-table-row">
+        <div class="signature-table-cell">Name:</div>
+        <div class="signature-table-cell">{% call show_value('order_salesman_name') %}<input type="text" name="order_salesman_name" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('order_order_engineering_name') %}<input type="text" name="order_order_engineering_name" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('order_manager_name') %}<input type="text" name="order_manager_name" class="signature-input">{% endcall %}</div>
+    </div>
+    <div class="signature-table-row">
+        <div class="signature-table-cell">Date:</div>
+        <div class="signature-table-cell">{% call show_value('order_salesman_date') %}<input type="date" name="order_salesman_date" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('order_order_engineering_date') %}<input type="date" name="order_order_engineering_date" class="signature-input">{% endcall %}</div>
+        <div class="signature-table-cell">{% call show_value('order_manager_date') %}<input type="date" name="order_manager_date" class="signature-input">{% endcall %}</div>
+    </div>
+    <div class="signature-table-row signature-table-remarks">
+        <div class="signature-table-cell" colspan="4" style="font-weight:bold; background:#f8f9fa;">Remarks and open items:</div>
+    </div>
+    <div class="signature-table-row">
+        <div class="signature-table-cell" colspan="4">{% call show_value('signature_remarks') %}<textarea name="signature_remarks" class="signature-remarks-textarea"></textarea>{% endcall %}</div>
 </div>
-<div class="question-row">
-    <div class="question-label">Sales Assistant Name:</div>
-    <input type="text" name="sales_assistant_name" required style="flex:3;">
+    <button type="button" class="signature-doodle-btn" onclick="activateSignatureDoodle(event)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M2 17.25V21h3.75l11.06-11.06-3.75-3.75L2 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z" fill="#b00"/></svg>
+        <span style="font-size:14px; color:#b00; margin-left:6px;">Sign</span>
+    </button>
+    <input type="hidden" name="signature_doodle_data" id="signature-doodle-data">
+    
+    <!-- Display doodle signature as overlay on signature section -->
+    {% if signature_doodle_data %}
+        {% if pdf_mode %}
+        <!-- For PDF: display as positioned image within signature section -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; z-index: 10; margin: 0; padding: 0; border-radius: 8px;">
+            <img src="{{ signature_doodle_data }}" alt="Signature" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; border-radius: 8px;">
+        </div>
+        {% else %}
+        <!-- For form view: display as overlay -->
+        <div class="signature-doodle-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;">
+            <img src="{{ signature_doodle_data }}" alt="Signature" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;">
+        </div>
+        {% endif %}
+    {% endif %}
 </div>
-<div class="question-row">
-    <div class="question-label">Supervisor Name:</div>
-    <input type="text" name="supervisor_name" required style="flex:3;">
-</div> 
+
+<!-- PDF Signature Display Section -->
+{% if pdf_mode %}
+<div style="margin-top: 30px; border: 2px solid #dadce0; border-radius: 8px; padding: 20px; background: #f8f9fa;">
+    <h3 style="margin-top: 0; color: #333; font-size: 18px;">Signatures</h3>
+    
+    {% if initial_signature %}
+    <div style="margin-bottom: 20px;">
+        <h4 style="color: #666; font-size: 16px; margin-bottom: 10px;">Initial Submission Signature:</h4>
+        <img src="{{ initial_signature }}" alt="Initial Signature" style="max-width: 100%; width: 400px; border: 1px solid #888; border-radius: 6px; background: white;">
+    </div>
+    {% endif %}
+    
+    {% if review_signature %}
+    <div style="margin-bottom: 20px;">
+        <h4 style="color: #666; font-size: 16px; margin-bottom: 10px;">Review Signature:</h4>
+        <img src="{{ review_signature }}" alt="Review Signature" style="max-width: 100%; width: 400px; border: 1px solid #888; border-radius: 6px; background: white;">
+    </div>
+    {% endif %}
+    
+    {% if approved %}
+    <div style="margin-top: 20px; padding: 10px; background: #28a745; color: white; border-radius: 6px; text-align: center; font-weight: bold;">
+        ✓ FORM APPROVED BY PROJECT MANAGER
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<style>
+.signature-section-table {
+    margin-top: 40px;
+    border: 2px solid #dadce0;
+    border-radius: 8px;
+    background: #fff;
+    padding: 0;
+    position: relative;
+    overflow: visible;
+    font-family: 'Roboto', Arial, sans-serif;
+    max-width: 100%;
+    min-width: 320px;
+    width: 100%;
+}
+.signature-table-header {
+    background: #888;
+    color: #fff;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 6px 12px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.signature-table-row {
+    display: flex;
+    border-bottom: 1px solid #dadce0;
+}
+.signature-table-cell {
+    flex: 1;
+    padding: 8px 10px;
+    border-right: 1px solid #dadce0;
+    font-size: 15px;
+    background: #fff;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+}
+.signature-table-cell:last-child {
+    border-right: none;
+}
+.signature-table-header-row .signature-table-cell {
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #222;
+    text-align: center;
+}
+.signature-table-subheader .signature-table-cell {
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #222;
+    border-right: none;
+}
+.signature-table-note-cell {
+    font-size: 13px;
+    color: #444;
+    background: #f8f9fa;
+    border-right: none;
+}
+.signature-input {
+    width: 95%;
+    padding: 4px 8px;
+    font-size: 15px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+.signature-remarks-textarea {
+    width: 99%;
+    min-height: 36px;
+    font-size: 15px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: #f8f9fa;
+    resize: vertical;
+}
+.signature-doodle-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 12px auto 8px auto;
+    background: #fff;
+    border: 1.5px solid #b00;
+    color: #b00;
+    border-radius: 6px;
+    padding: 6px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+    position: relative;
+    z-index: 11;
+    justify-content: center;
+}
+.signature-doodle-btn:hover {
+    background: #f8f9fa;
+    border-color: #a00;
+}
+.signature-doodle-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    pointer-events: none;
+}
+.signature-doodle-overlay.active {
+    pointer-events: auto;
+    cursor: crosshair;
+}
+@media (max-width: 900px) {
+    .signature-section-table, #signature-doodle-canvas {
+        max-width: 99vw;
+        min-width: 220px;
+    }
+}
+</style>
+<script>
+function activateSignatureDoodle(e) {
+    e.preventDefault();
+    const section = document.getElementById('signature-section-table');
+    let canvas = document.getElementById('signature-doodle-overlay');
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.id = 'signature-doodle-overlay';
+        canvas.className = 'signature-doodle-overlay active';
+        section.appendChild(canvas);
+    }
+    // Set canvas size to match section
+    canvas.width = section.offsetWidth;
+    canvas.height = section.offsetHeight;
+    canvas.classList.add('active');
+    let ctx = canvas.getContext('2d');
+    let drawing = false;
+    let lastX = 0, lastY = 0;
+    canvas.onmousedown = function(ev) {
+        drawing = true;
+        [lastX, lastY] = [ev.offsetX, ev.offsetY];
+    };
+    canvas.onmousemove = function(ev) {
+        if (!drawing) return;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(ev.offsetX, ev.offsetY);
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        [lastX, lastY] = [ev.offsetX, ev.offsetY];
+    };
+    canvas.onmouseup = function() { drawing = false; };
+    canvas.onmouseout = function() { drawing = false; };
+    // Touch support
+    canvas.ontouchstart = function(ev) {
+        drawing = true;
+        let rect = canvas.getBoundingClientRect();
+        lastX = ev.touches[0].clientX - rect.left;
+        lastY = ev.touches[0].clientY - rect.top;
+    };
+    canvas.ontouchmove = function(ev) {
+        if (!drawing) return;
+        let rect = canvas.getBoundingClientRect();
+        let x = ev.touches[0].clientX - rect.left;
+        let y = ev.touches[0].clientY - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        lastX = x;
+        lastY = y;
+        ev.preventDefault();
+    };
+    canvas.ontouchend = function() { drawing = false; };
+    // Save doodle on form submit
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function() {
+            document.getElementById('signature-doodle-data').value = canvas.toDataURL();
+        });
+    }
+    // Hide overlay on click outside
+    document.addEventListener('mousedown', function handler(ev) {
+        if (!canvas.contains(ev.target) && ev.target.className !== 'signature-doodle-btn') {
+            canvas.classList.remove('active');
+            document.removeEventListener('mousedown', handler);
+        }
+    });
+}
+</script> 

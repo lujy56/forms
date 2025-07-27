@@ -219,16 +219,6 @@
         </div>
     {% endif %}
 
-    <!-- Digital Signature -->
-    <div class="signature-section">
-        <div class="question-label">Digital Signature:</div>
-        {% if signature_data %}
-            <img src="{{ signature_data }}" alt="Digital Signature" class="signature-image">
-        {% else %}
-            <div style="color: #999; font-style: italic;">No signature provided</div>
-        {% endif %}
-    </div>
-
     <!-- Timestamps -->
     {% if timestamps %}
     <div class="timestamps">
