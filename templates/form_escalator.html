@@ -7,6 +7,7 @@
     font-style: normal;
 }
 
+/* PDF-specific styling only */
 body {
     font-family: 'Roboto', Arial, sans-serif;
     font-size: 14px;
@@ -136,6 +137,64 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
 {% endif %}
 {% endif %}
 
+<!-- Original Form Styling (for non-PDF mode) -->
+{% if not pdf_mode %}
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.section-title {
+    background: #f0f0f0;
+    color: #b00;
+    padding: 8px 12px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border-left: 4px solid #b00;
+}
+
+.question-row {
+    margin-bottom: 8px;
+    padding: 10px;
+    background: #fafafa;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.question-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 18.5px;
+}
+
+.question-options {
+    margin: 10px 0;
+}
+
+.question-options label {
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.question-comments {
+    margin-top: 10px;
+}
+
+.question-comments textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+</style>
+{% endif %}
+
 {% macro show_value(name, default='') %}
     {% if pdf_mode %}
         <span style="font-weight:normal;">{{ fields[name] if fields and name in fields else default }}</span>
@@ -156,7 +215,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
 <!-- Now update all text inputs, textareas, radios, and signature table cells to use the show_value macro as in the elevator form. -->
 
 <!-- Offer / Order Review Checklist Section -->
-<div class="section-title" style="color: white; font-weight: bold;">Offer / Order Review Checklist</div>
+<div class="section-title">Offer / Order Review Checklist</div>
 <div style="color: #666; margin-bottom: 20px;">Global Master</div>
 
 <div class="offer-review-grid">
@@ -293,32 +352,32 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
 
 <!-- Escalator/Moving Walk Form Sections -->
 <div class="section-title">Contact Information</div>
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">Salesman Email:</div>
     {% call show_value('salesman_email') %}
     <input type="email" name="salesman_email" required style="flex:3;">
     {% endcall %}
 </div>
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">Project Manager Email:</div>
     {% call show_value('pm_email') %}
     <input type="email" name="pm_email" required style="flex:3;">
     {% endcall %}
 </div>
 <div class="section-title">Project Data</div>
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">Color code:</div>
     {% call show_value('color_code') %}
     <input type="text" name="color_code" required style="flex:3;">
     {% endcall %}
 </div>
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">Product line:</div>
     {% call show_value('product_line') %}
     <input type="text" name="product_line" required style="flex:3;">
     {% endcall %}
 </div>
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">Process type:</div>
     {% call show_value('process_type') %}
     <input type="text" name="process_type" required style="flex:3;">
@@ -335,7 +394,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Special work conditions (Temperature, dust, humidity, drilling restrictions, night shift, ...)?', 'special_work_conditions', '')
 ] %}
 {% for label, name, comment_hint in escalator_questions %}
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
@@ -369,7 +428,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Sprinkler pipes?', 'sprinkler_pipes', '')
 ] %}
 {% for label, name, comment_hint in project_scope_questions %}
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
@@ -397,7 +456,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Keys/special agreement required to access the building?', 'keys_required', '')
 ] %}
 {% for label, name, comment_hint in site_survey_questions %}
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
@@ -431,7 +490,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Floor cover protection considered?', 'floor_cover_protection', '')
 ] %}
 {% for label, name, comment_hint in installation_questions %}
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
@@ -455,7 +514,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Penalty agreed?', 'penalty_agreed', '')
 ] %}
 {% for label, name, comment_hint in financial_questions %}
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
@@ -479,7 +538,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     ('Special code requirements (Earthquake, fire rating, fire fighter, IP rating, local code, ...)?', 'special_code_requirements', ''),
 ] %}
 {% for label, name, comment_hint in code_questions %}
-<div class="question-container">
+<div class="{% if pdf_mode %}question-container{% else %}question-row{% endif %}">
     <div class="question-label">{{ label }}</div>
     <div class="question-options">
         {% if pdf_mode %}
