@@ -54,7 +54,7 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     <div class="offer-review-item">
     <div class="question-label">Project Name:</div>
         {% call show_value('project_name') %}
-        <input type="text" name="project_name" required>
+        <textarea name="project_name" required rows="1" style="width: 100%; resize: both; min-height: 40px; max-height: 120px;"></textarea>
         {% endcall %}
 </div>
     <div class="offer-review-item">
@@ -64,11 +64,17 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
         {% endcall %}
 </div>
     <div class="offer-review-item">
-    <div class="question-label">Customer:</div>
+    <div class="question-label">Customer Name:</div>
         {% call show_value('customer_name') %}
-        <input type="text" name="customer_name" required>
+        <textarea name="customer_name" required rows="1" style="width: 100%; resize: both; min-height: 40px; max-height: 120px;"></textarea>
         {% endcall %}
     </div>
+    <div class="offer-review-item">
+    <div class="question-label">Number of Units:</div>
+        {% call show_value('number_of_units') %}
+        <input type="text" name="number_of_units" required>
+        {% endcall %}
+</div>
     <div class="offer-review-item">
         <div class="question-label">Customer Contact:</div>
         {% call show_value('customer_contact') %}
@@ -91,14 +97,26 @@ input, textarea, select, button, .signature-doodle-btn, script { display: none !
     font-family: 'Roboto', Arial, sans-serif;
 }
 .offer-review-item input[type="text"] {
-    font-size: 15px;
-    padding: 6px 10px;
+    font-size: 16px;
+    padding: 8px 12px;
     border: 1px solid #dadce0;
     border-radius: 4px;
     background: #f1f3f4;
     margin-top: 6px;
-    width: 90%;
-    max-width: 260px;
+    width: 95%;
+    max-width: 320px;
+    box-sizing: border-box;
+}
+
+.offer-review-item textarea[name="project_name"],
+.offer-review-item textarea[name="customer_name"] {
+    font-size: 16px;
+    padding: 8px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: #f1f3f4;
+    margin-top: 6px;
+    font-family: 'Roboto', Arial, sans-serif;
     box-sizing: border-box;
 }
 @media (max-width: 700px) {
